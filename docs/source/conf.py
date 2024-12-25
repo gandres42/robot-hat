@@ -36,6 +36,8 @@ author = 'www.sunfounder.com'
 # ones.
 extensions = [
     'sphinx.ext.autosectionlabel',
+    'sphinx_copybutton',
+    'sphinx_rtd_theme',
     'sphinx_toolbox.collapse',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
@@ -43,6 +45,9 @@ extensions = [
     #'sphinx.ext.imgmath',
 ]
 
+html_theme_options = {
+    'flyout_display': 'attached'
+}
 #latex_engine = 'xelatex'
 
 # Add any paths that contain templates here, relative to this directory.
@@ -63,19 +68,11 @@ html_theme = 'sphinx_rtd_theme'
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 
-# SunFounder logo
+#### RTD+
 
 html_js_files = [
     'https://ezblock.cc/readDocFile/custom.js',
     './lang.js', # new
-]
-html_css_files = [
-    'https://ezblock.cc/readDocFile/custom.css',
-]
-
-#### RTD+
-
-html_js_files = [
     'https://ezblock.cc/readDocFile/readTheDoc/src/js/ace.js',
     'https://ezblock.cc/readDocFile/readTheDoc/src/js/ext-language_tools.js',
     'https://ezblock.cc/readDocFile/readTheDoc/src/js/theme-chrome.js',
@@ -85,12 +82,13 @@ html_js_files = [
     'https://ezblock.cc/readDocFile/readTheDoc/src/js/xterm.js',
     'https://ezblock.cc/readDocFile/readTheDoc/src/js/FitAddon.js',
     'https://ezblock.cc/readDocFile/readTheDoc/src/js/readTheDocIndex.js',
-
 ]
 html_css_files = [
+    'https://ezblock.cc/readDocFile/custom.css',
     'https://ezblock.cc/readDocFile/readTheDoc/src/css/index.css',
     'https://ezblock.cc/readDocFile/readTheDoc/src/css/xterm.css',
 ]
+
 
 
 
