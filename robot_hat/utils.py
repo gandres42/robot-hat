@@ -17,6 +17,15 @@ def set_volume(value):
     os.system(cmd)
 
 
+def command_exists(cmd):
+    import subprocess
+    try:
+        subprocess.check_output(['which', cmd], stderr=subprocess.STDOUT)
+        return True
+    except subprocess.CalledProcessError:
+        return False
+
+
 def run_command(cmd):
     """
     Run command and return status and output

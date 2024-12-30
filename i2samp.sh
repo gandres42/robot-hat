@@ -21,24 +21,24 @@ DISCLAIMER
 
 # script control variables
 # =================================================================
-productname="i2s amplifier" # the name of the product to install
-scriptname="i2samp" # the name of this script
-spacereq=1 # minimum size required on root partition in MB
-debugmode="no" # whether the script should use debug routines
-debuguser="none" # optional test git user to use in debug mode
-debugpoint="none" # optional git repo branch or tag to checkout
-forcesudo="no" # whether the script requires to be ran with root privileges
-promptreboot="no" # whether the script should always prompt user to reboot
-mininstall="no" # whether the script enforces minimum install routine
-customcmd="yes" # whether to execute commands specified before exit
-armv6="yes" # whether armv6 processors are supported
-armv7="yes" # whether armv7 processors are supported
-armv8="yes" # whether armv8 processors are supported
-arm64="yes" # whether arm64 processors are supported
-raspbianonly="no" # whether the script is allowed to run on other OSes
-osreleases=( "Raspbian" ) # list os-releases supported
-oswarning=( "Debian" "Kano" "Mate" "PiTop" "Ubuntu" ) # list experimental os-releases
-osdeny=( "Darwin" "Kali" ) # list os-releases specifically disallowed
+productname="i2s amplifier"                         # the name of the product to install
+scriptname="i2samp"                                 # the name of this script
+spacereq=1                                          # minimum size required on root partition in MB
+debugmode="no"                                      # whether the script should use debug routines
+debuguser="none"                                    # optional test git user to use in debug mode
+debugpoint="none"                                   # optional git repo branch or tag to checkout
+forcesudo="no"                                      # whether the script requires to be ran with root privileges
+promptreboot="no"                                   # whether the script should always prompt user to reboot
+mininstall="no"                                     # whether the script enforces minimum install routine
+customcmd="yes"                                     # whether to execute commands specified before exit
+armv6="yes"                                         # whether armv6 processors are supported
+armv7="yes"                                         # whether armv7 processors are supported
+armv8="yes"                                         # whether armv8 processors are supported
+arm64="yes"                                         # whether arm64 processors are supported
+raspbianonly="no"                                   # whether the script is allowed to run on other OSes
+osreleases=("Raspbian")                             # list os-releases supported
+oswarning=("Debian" "Kano" "Mate" "PiTop" "Ubuntu") # list experimental os-releases
+osdeny=("Darwin" "Kali")                            # list os-releases specifically disallowed
 
 FORCE=$1
 DEVICE_TREE=true
@@ -67,7 +67,7 @@ confirm() {
     if [ "$FORCE" == '-y' ]; then
         true
     else
-        read -r -p "$1 [y/N] " response < /dev/tty
+        read -r -p "$1 [y/N] " response </dev/tty
         if [[ $response =~ ^(yes|y|Y)$ ]]; then
             true
         else
@@ -77,12 +77,12 @@ confirm() {
 }
 
 prompt() {
-        read -r -p "$1 [y/N] " response < /dev/tty
-        if [[ $response =~ ^(yes|y|Y)$ ]]; then
-            true
-        else
-            false
-        fi
+    read -r -p "$1 [y/N] " response </dev/tty
+    if [[ $response =~ ^(yes|y|Y)$ ]]; then
+        true
+    else
+        false
+    fi
 }
 
 success() {
@@ -118,13 +118,13 @@ sudocheck() {
 
 sysclean() {
     sudo apt-get clean && sudo apt-get autoclean
-    sudo apt-get -y autoremove &> /dev/null
+    sudo apt-get -y autoremove &>/dev/null
 }
 
 sysupdate() {
     if ! $UPDATE_DB; then
         echo "Updating apt indexes..." && progress 3 &
-        sudo apt-get update 1> /dev/null || { warning "Apt failed to update indexes!" && exit 1; }
+        sudo apt-get update 1>/dev/null || { warning "Apt failed to update indexes!" && exit 1; }
         echo "Reading package lists..."
         progress 3 && UPDATE_DB=true
     fi
@@ -133,7 +133,7 @@ sysupdate() {
 sysupgrade() {
     sudo apt-get upgrade
     sudo apt-get clean && sudo apt-get autoclean
-    sudo apt-get -y autoremove &> /dev/null
+    sudo apt-get -y autoremove &>/dev/null
 }
 
 sysreboot() {
@@ -150,12 +150,12 @@ arch_check() {
     IS_ARMHF=false
     IS_ARMv6=false
 
-    if uname -m | grep "aarch64" > /dev/null; then
+    if uname -m | grep "aarch64" >/dev/null; then
         IS_ARM64=true
     fi
-    if uname -m | grep "armv.l" > /dev/null; then
+    if uname -m | grep "armv.l" >/dev/null; then
         IS_ARMHF=true
-        if uname -m | grep "armv6l" > /dev/null; then
+        if uname -m | grep "armv6l" >/dev/null; then
             IS_ARMv6=true
         fi
     fi
@@ -168,22 +168,22 @@ os_check() {
     IS_EXPERIMENTAL=false
 
     if [ -f /etc/os-release ]; then
-        if cat /etc/os-release | grep "Raspbian" > /dev/null; then
+        if cat /etc/os-release | grep "Raspbian" >/dev/null; then
             IS_RASPBIAN=true && IS_SUPPORTED=true
         fi
-        if command -v apt-get > /dev/null; then
+        if command -v apt-get >/dev/null; then
             for os in ${osreleases[@]}; do
-                if cat /etc/os-release | grep $os > /dev/null; then
+                if cat /etc/os-release | grep $os >/dev/null; then
                     IS_SUPPORTED=true && IS_EXPERIMENTAL=false
                 fi
             done
             for os in ${oswarning[@]}; do
-                if cat /etc/os-release | grep $os > /dev/null; then
+                if cat /etc/os-release | grep $os >/dev/null; then
                     IS_SUPPORTED=false && IS_EXPERIMENTAL=true
                 fi
             done
             for os in ${osdeny[@]}; do
-                if cat /etc/os-release | grep $os > /dev/null; then
+                if cat /etc/os-release | grep $os >/dev/null; then
                     IS_SUPPORTED=false && IS_EXPERIMENTAL=false
                 fi
             done
@@ -222,7 +222,7 @@ os_check() {
             fi
         done
     fi
-    if uname -s | grep "Darwin" > /dev/null; then
+    if uname -s | grep "Darwin" >/dev/null; then
         IS_MACOSX=true
         for os in ${osdeny[@]}; do
             if [ $os == "Darwin" ]; then
@@ -237,19 +237,19 @@ raspbian_check() {
     IS_EXPERIMENTAL=false
 
     if [ -f /etc/os-release ]; then
-        if cat /etc/os-release | grep "/sid" > /dev/null; then
+        if cat /etc/os-release | grep "/sid" >/dev/null; then
             IS_SUPPORTED=false && IS_EXPERIMENTAL=true
-        elif cat /etc/os-release | grep "bookworm" > /dev/null; then
+        elif cat /etc/os-release | grep "bookworm" >/dev/null; then
             IS_SUPPORTED=false && IS_EXPERIMENTAL=true
-        elif cat /etc/os-release | grep "bullseye" > /dev/null; then
+        elif cat /etc/os-release | grep "bullseye" >/dev/null; then
             IS_SUPPORTED=false && IS_EXPERIMENTAL=true
-        elif cat /etc/os-release | grep "buster" > /dev/null; then
+        elif cat /etc/os-release | grep "buster" >/dev/null; then
             IS_SUPPORTED=false && IS_EXPERIMENTAL=true
-        elif cat /etc/os-release | grep "stretch" > /dev/null; then
+        elif cat /etc/os-release | grep "stretch" >/dev/null; then
             IS_SUPPORTED=false && IS_EXPERIMENTAL=false
-        elif cat /etc/os-release | grep "jessie" > /dev/null; then
+        elif cat /etc/os-release | grep "jessie" >/dev/null; then
             IS_SUPPORTED=true && IS_EXPERIMENTAL=false
-        elif cat /etc/os-release | grep "wheezy" > /dev/null; then
+        elif cat /etc/os-release | grep "wheezy" >/dev/null; then
             IS_SUPPORTED=true && IS_EXPERIMENTAL=false
         else
             IS_SUPPORTED=false && IS_EXPERIMENTAL=false
@@ -300,9 +300,9 @@ elif $IS_ARMv6 && [ $armv6 == "no" ]; then
     newline && exit 1
 fi
 
-if [ $raspbianonly == "yes" ] && ! $IS_RASPBIAN;then
-        warning "This script is intended for Raspbian on a Raspberry Pi!"
-        newline && exit 1
+if [ $raspbianonly == "yes" ] && ! $IS_RASPBIAN; then
+    warning "This script is intended for Raspbian on a Raspberry Pi!"
+    newline && exit 1
 fi
 
 if $IS_RASPBIAN; then
@@ -318,8 +318,8 @@ if $IS_RASPBIAN; then
 fi
 
 if ! $IS_SUPPORTED && ! $IS_EXPERIMENTAL; then
-        warning "Your operating system is not supported, sorry!"
-        newline && exit 1
+    warning "Your operating system is not supported, sorry!"
+    newline && exit 1
 fi
 
 if $IS_EXPERIMENTAL; then
@@ -389,8 +389,8 @@ if $DEVICE_TREE; then
         echo "Commenting out Blacklist entry in "
         echo "$BLACKLIST"
         sudo sed -i -e "s|^blacklist[[:space:]]*i2c-bcm2708.*|#blacklist i2c-bcm2708|" \
-                    -e "s|^blacklist[[:space:]]*snd-soc-pcm512x.*|#blacklist snd-soc-pcm512x|" \
-                    -e "s|^blacklist[[:space:]]*snd-soc-wm8804.*|#blacklist snd-soc-wm8804|" $BLACKLIST &> /dev/null
+            -e "s|^blacklist[[:space:]]*snd-soc-pcm512x.*|#blacklist snd-soc-pcm512x|" \
+            -e "s|^blacklist[[:space:]]*snd-soc-wm8804.*|#blacklist snd-soc-wm8804|" $BLACKLIST &>/dev/null
     fi
 else
     newline
@@ -399,7 +399,7 @@ else
     exit 1
 fi
 
-# install alsa-utils 
+# install alsa-utils
 #=======================
 sudo apt install alsa-utils -y
 
@@ -407,7 +407,7 @@ sudo apt install alsa-utils -y
 #=======================
 newline
 echo "Installing aplay systemd unit"
-sudo sh -c 'cat > /etc/systemd/system/aplay.service' << 'EOL'
+sudo sh -c 'cat > /etc/systemd/system/aplay.service' <<'EOL'
 [Unit]
 Description=Invoke aplay from /dev/zero at system start.
 
@@ -426,9 +426,9 @@ echo "the background at boot. This will remove all"
 echo "popping/clicking but does use some processor time."
 newline
 if confirm "Activate '/dev/zero' playback in background? [RECOMMENDED]"; then
-newline
-sudo systemctl enable aplay
-ASK_TO_REBOOT=true
+    newline
+    sudo systemctl enable aplay
+    ASK_TO_REBOOT=true
 fi
 
 # config asound
@@ -445,7 +445,7 @@ fi
 
 # auto_sound_card scripts
 
-sudo cat > /usr/local/bin/auto_sound_card << '-EOF'
+sudo cat >/usr/local/bin/auto_sound_card <<'-EOF'
 #!/bin/bash
 
 ASOUND_CONF=/etc/asound.conf
@@ -512,7 +512,7 @@ sudo chmod +x /usr/local/bin/auto_sound_card
 sudo /usr/local/bin/auto_sound_card 100
 
 # add auto_sound_card start on boot
-sudo cat > /etc/systemd/system/auto_sound_card.service << EOF
+sudo cat >/etc/systemd/system/auto_sound_card.service <<EOF
 [Unit]
 Description=Auto config als sound card num at system start.
 Wants=aplay.service
@@ -533,7 +533,15 @@ echo "We can now test your $productname"
 warning "Set your speakers if possible!"
 if confirm "Do you wish to test your system now?"; then
     echo "Testing..."
-    pinctrl set 20 op dh
+    # enable speaker
+    if command -v pinctrl >/dev/null; then
+        pinctrl set 20 op dh
+    elif command -v raspi-gpio >/dev/null; then
+        raspi-gpio set 20 op dh
+    else
+        warning "Could not find pinctrl or raspi-gpio"
+    fi
+    # test speaker
     speaker-test -l5 -c2 -t wav
 fi
 newline

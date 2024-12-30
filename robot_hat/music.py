@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from .basic import _Basic_class
+from .utils import command_exists
 import time
 import threading
 import pyaudio
@@ -76,11 +77,21 @@ class Music(_Basic_class):
 
     @staticmethod
     def enable_speaker():
-        os.popen("pinctrl set 20 op dh")
+        if command_exists("pinctrl"):
+            os.popen("pinctrl set 20 op dh")
+        elif command_exists("raspi-gpio"):
+            os.popen("raspi-gpio set 20 op dh")
+        else:
+            print("Can't find `pinctrl` or `raspi-gpio` to enable speaker")
 
     @staticmethod
     def disable_speaker():
-        os.popen("pinctrl set 20 op dl")
+        if command_exists("pinctrl"):
+            os.popen("pinctrl set 20 op dl")
+        elif command_exists("raspi-gpio"):
+            os.popen("raspi-gpio set 20 op dl")
+        else:
+            print("Can't find `pinctrl` or `raspi-gpio` to disable speaker")
 
     def time_signature(self, top: int = None, bottom: int = None):
         """
