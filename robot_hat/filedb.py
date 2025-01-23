@@ -29,7 +29,8 @@ class fileDB(object):
 					raise FileNotFoundError("key does not exist")
 
 	def set(self, key, value):
-		with open(self._db_file_path, "rw") as db_file:
+		with open(self._db_file_path, "r") as db_file:
 			db = json.load(db_file)
+		with open(self._db_file_path, "w") as db_file:
 			db[key] = value
 			json.dump(db, db_file)
