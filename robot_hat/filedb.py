@@ -5,17 +5,17 @@ class fileDB(object):
 	"""
 	A file based database, read and write arguements in the specific file.
 	"""
-	def __init__(self, db_path:str):
+	def __init__(self, db_file_path:str):
 		"""
 		:param db_file: the file to save the data.
 		:type db_file: str
 		"""
   
-		if not os.path.exists(db_path):
-			os.makedirs(os.path.dirname(db_path), exist_ok=True)
-			with open(db_path, "w") as file:
+		if not os.path.exists(db_file_path):
+			os.makedirs(os.path.dirname(db_file_path), exist_ok=True)
+			with open(db_file_path, "w") as file:
 				file.write("{}")
-		self._db_file_path = db_path
+		self._db_file_path = db_file_path
 
 	def get(self, key, default_value = None):
 		with open(self._db_file_path, "r") as db_file:
