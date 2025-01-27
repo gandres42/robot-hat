@@ -17,6 +17,7 @@ setuptools.setup(
         'pillow',
         'pygame>=2.1.2',
         'pigpio',
-        'RPi.GPIO'
+        'RPi.GPIO',
+        'lgpio'
     ]
 )
